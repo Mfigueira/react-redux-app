@@ -1,40 +1,63 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { Component } from 'react';
+import { connect } from 'react-redux';
 import { counterActions } from '../store/counter-slice';
 import classes from './Counter.module.css';
 
-const Counter = () => {
-  const dispatch = useDispatch();
-  const counter = useSelector(state => state.counter.counter);
-  const show = useSelector(state => state.counter.show);
+// Class based component approach
+class Counter extends Component {
+  hanldeIncrement() {
+    this.props.increment();
+  }
 
-  const hanldeIncrement = () => {
-    dispatch(counterActions.increment());
-  };
+  hanldeIncrementByFive() {
+    this.props.increaseFive();
+  }
 
-  const hanldeIncrementByFive = () => {
-    dispatch(counterActions.increase(5));
-  };
+  hanldeDecrement() {
+    this.props.decrement();
+  }
 
-  const hanldeDecrement = () => {
-    dispatch(counterActions.decrement());
-  };
+  toggleCounterHandler() {
+    this.props.toggle();
+  }
 
-  const toggleCounterHandler = () => {
-    dispatch(counterActions.toggle());
-  };
+  render() {
+    return (
+      <main className={classes.counter}>
+        <h1>Redux Counter</h1>
+        {this.props.show && (
+          <div className={classes.value}>{this.props.counter}</div>
+        )}
+        <div>
+          <button onClick={this.hanldeIncrement.bind(this)}>Increment</button>
+          <button onClick={this.hanldeIncrementByFive.bind(this)}>
+            Increase by 5
+          </button>
+          <button onClick={this.hanldeDecrement.bind(this)}>Decrement</button>
+        </div>
+        <button onClick={this.toggleCounterHandler.bind(this)}>
+          Toggle Counter
+        </button>
+      </main>
+    );
+  }
+}
 
-  return (
-    <main className={classes.counter}>
-      <h1>Redux Counter</h1>
-      {show && <div className={classes.value}>{counter}</div>}
-      <div>
-        <button onClick={hanldeIncrement}>Increment</button>
-        <button onClick={hanldeIncrementByFive}>Increase by 5</button>
-        <button onClick={hanldeDecrement}>Decrement</button>
-      </div>
-      <button onClick={toggleCounterHandler}>Toggle Counter</button>
-    </main>
-  );
-};
+// FN to make state available like props in class component
+const mapStateToProps = state => ({
+  counter: state.counter.counter,
+  show: state.counter.show,
+});
 
-export default Counter;
+// FN to make actions available like props in class component
+const mapDispatchToProps = dispatch => ({
+  increment: () => dispatch(counterActions.increment()),
+  increaseFive: () => dispatch(counterActions.increase(5)),
+  decrement: () => dispatch(counterActions.decrement()),
+  toggle: () => dispatch(counterActions.toggle()),
+});
+
+// Exporting the connect HOC (High order function component)
+// - It manages the subscription of the Component to the Store
+// - Alternative to use 'useSelector' and 'useDispatch'
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
