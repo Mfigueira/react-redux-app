@@ -1,19 +1,19 @@
-import { useRef } from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from "../store/auth-slice";
-import classes from "./Auth.module.css";
+import { useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/auth-slice';
+import classes from './Auth.module.css';
 
 const Auth = () => {
   const dispatch = useDispatch();
   const emailRef = useRef();
   const passRef = useRef();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (emailRef.current.value === "a@a" && passRef.current.value === "123") {
+    if (emailRef.current.value === 'a@a' && passRef.current.value === '123') {
       dispatch(authActions.login());
     } else {
-      console.log("invalid auth. Use: a@a + 123");
+      console.log('invalid auth. Use: a@a + 123');
     }
   };
 
